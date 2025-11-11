@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Weibo Video Downloader</title>
+  <title>Weibo Video Downloader - Dark Mode</title>
 
   <!-- Google Fonts: Inter & Ubuntu Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -13,10 +13,10 @@
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Bootstrap CSS (optional) -->
+  <!-- Bootstrap CSS (untuk spinner) -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
 
-  <!-- Tailwind config -->
+  <!-- Tailwind Config -->
   <script>
     tailwind.config = {
       theme: {
@@ -30,26 +30,33 @@
     }
   </script>
 
+  <!-- Dark Theme Styles -->
   <style>
-    body { font-family: 'Inter','system-ui','sans-serif'; background-color:#f0f2f5; }
-    .ios-card { background:#fff; border-radius:1rem; box-shadow:0 4px 6px rgba(0,0,0,.1); transition:all .2s; }
-    .ios-input { border:1px solid #e5e7eb; border-radius:.75rem; padding:.75rem 1rem; font-size:1rem; width:100%; }
-    .ios-button { border-radius:.75rem; font-weight:600; padding:.75rem 1.5rem; background:#007aff; color:#fff; transition:background-color .2s; }
-    .ios-button:hover { background:#005ecb; }
-    .sidebar { transition: transform .3s ease-in-out; }
+    body { font-family: 'Inter', 'system-ui', 'sans-serif'; background-color: #111827; color: #d1d5db; }
+    .ios-card { background-color: #1f2937; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.4); border: 1px solid #374151;}
+    .ios-input { background-color: #374151; border: 1px solid #4b5563; border-radius: .75rem; padding: .75rem 1rem; font-size: 1rem; width: 100%; color: #f9fafb; }
+    .ios-input::placeholder { color: #9ca3af; }
+    .ios-button { border-radius: .75rem; font-weight: 600; padding: .75rem 1.5rem; background-color: #3b82f6; color: #fff; transition: background-color .2s; }
+    .ios-button:hover { background-color: #2563eb; }
+    .sidebar { background-color: #1f2937; border-right: 1px solid #374151; transition: transform .3s ease-in-out; }
+    .sidebar a { color: #d1d5db; }
+    .sidebar a:hover { background-color: #374151; }
+    details { background-color: #374151; }
+    summary { color: #f9fafb; }
+    .spinner-border { color: #fff !important; }
   </style>
 </head>
 <body class="flex">
 
   <!-- Sidebar -->
-  <aside id="sidebar" class="sidebar bg-white h-screen w-64 fixed top-0 left-0 transform -translate-x-full md:translate-x-0 p-4 shadow-lg z-20">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">Menu</h2>
+  <aside id="sidebar" class="sidebar h-screen w-64 fixed top-0 left-0 transform -translate-x-full md:translate-x-0 p-4 z-20">
+    <h2 class="text-2xl font-bold text-white mb-6">Menu</h2>
     <nav>
-      <a href="#" class="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+      <a href="#" class="flex items-center p-3 rounded-lg">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
         <span class="ml-3">Home</span>
       </a>
-      <a href="#faq" class="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg mt-2">
+      <a href="#faq" class="flex items-center p-3 rounded-lg mt-2">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         <span class="ml-3">FAQ</span>
       </a>
@@ -57,18 +64,18 @@
   </aside>
 
   <!-- Backdrop -->
-  <div id="backdrop" class="fixed inset-0 bg-black/40 hidden md:hidden z-10"></div>
+  <div id="backdrop" class="fixed inset-0 bg-black/60 hidden md:hidden z-10"></div>
 
-  <!-- Main -->
+  <!-- Main Content -->
   <main class="flex-1 md:ml-64 p-6">
-    <button id="menu-button" class="md:hidden p-2 rounded-md bg-gray-200 mb-4" aria-label="Open menu">
+    <button id="menu-button" class="md:hidden p-2 rounded-md bg-gray-800 text-gray-300 mb-4" aria-label="Open menu">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
     </button>
 
     <div class="container mx-auto">
       <header class="text-center mb-8">
-        <h1 class="text-4xl font-bold text-gray-900">Weibo Video Downloader</h1>
-        <p class="text-gray-600 mt-2">Paste a Weibo video link below and download it for free.</p>
+        <h1 class="text-4xl font-bold text-white">Weibo Video Downloader</h1>
+        <p class="text-gray-400 mt-2">Tempel tautan video Weibo di bawah ini untuk mengunduhnya.</p>
       </header>
 
       <!-- Form -->
@@ -79,7 +86,7 @@
           </div>
           <button type="submit" class="ios-button w-full flex items-center justify-center">
             <span id="button-text">Download</span>
-            <div id="loader" class="spinner-border spinner-border-sm text-light ms-2 d-none" role="status" aria-hidden="true"></div>
+            <div id="loader" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></div>
           </button>
         </form>
       </section>
@@ -89,28 +96,25 @@
 
       <!-- FAQ -->
       <section id="faq" class="mt-12 max-w-2xl mx-auto">
-        <h2 class="text-2xl font-bold text-center mb-6">Frequently Asked Questions (FAQ)</h2>
+        <h2 class="text-2xl font-bold text-center text-white mb-6">Pertanyaan Umum (FAQ)</h2>
         <div class="space-y-4">
-          <details class="bg-white p-4 rounded-lg shadow-sm cursor-pointer">
-            <summary class="font-semibold">How to download a Weibo video?</summary>
-            <p class="mt-2 text-gray-700">Copy the Weibo video URL, paste it, then click "Download".</p>
+          <details class="p-4 rounded-lg cursor-pointer">
+            <summary class="font-semibold">Bagaimana cara mengunduh video Weibo?</summary>
+            <p class="mt-2 text-gray-400">Salin URL video Weibo, tempel di kotak input, lalu klik "Download".</p>
           </details>
-          <details class="bg-white p-4 rounded-lg shadow-sm cursor-pointer">
-            <summary class="font-semibold">Is this service free?</summary>
-            <p class="mt-2 text-gray-700">Yes. No limits.</p>
+          <details class="p-4 rounded-lg cursor-pointer">
+            <summary class="font-semibold">Apakah layanan ini gratis?</summary>
+            <p class="mt-2 text-gray-400">Ya, layanan ini gratis untuk digunakan tanpa batasan.</p>
           </details>
-          <details class="bg-white p-4 rounded-lg shadow-sm cursor-pointer">
-            <summary class="font-semibold">Mobile support?</summary>
-            <p class="mt-2 text-gray-700">Fully responsive on phones and tablets.</p>
+          <details class="p-4 rounded-lg cursor-pointer">
+            <summary class="font-semibold">Apakah bisa digunakan di ponsel?</summary>
+            <p class="mt-2 text-gray-400">Tentu, situs ini sepenuhnya responsif dan berfungsi di semua perangkat.</p>
           </details>
         </div>
       </section>
     </div>
   </main>
-
-  <!-- Bootstrap JS (optional) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
+  
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('download-form');
@@ -122,74 +126,39 @@
       const menuButton = document.getElementById('menu-button');
       const backdrop = document.getElementById('backdrop');
 
-      // helpers
       const isMobile = () => window.innerWidth < 768;
       const isOpen = () => !sidebar.classList.contains('-translate-x-full');
-      function openSidebar() {
-        sidebar.classList.remove('-translate-x-full');
-        if (isMobile()) backdrop.classList.remove('hidden');
-      }
-      function closeSidebar() {
-        sidebar.classList.add('-translate-x-full');
-        backdrop.classList.add('hidden');
-      }
+      function openSidebar() { sidebar.classList.remove('-translate-x-full'); if (isMobile()) backdrop.classList.remove('hidden'); }
+      function closeSidebar() { sidebar.classList.add('-translate-x-full'); backdrop.classList.add('hidden'); }
 
-      // initial state
       if (isMobile()) closeSidebar(); else sidebar.classList.remove('-translate-x-full');
-
-      // toggle button
-      menuButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (isOpen()) closeSidebar(); else openSidebar();
-      });
-
-      // click outside
-      document.addEventListener('click', (e) => {
-        if (!isMobile()) return;
-        const outside = !sidebar.contains(e.target) && !menuButton.contains(e.target);
-        if (isOpen() && outside) closeSidebar();
-      });
-
-      // backdrop click
+      menuButton.addEventListener('click', (e) => { e.stopPropagation(); isOpen() ? closeSidebar() : openSidebar(); });
+      document.addEventListener('click', (e) => { if (isMobile() && isOpen() && !sidebar.contains(e.target) && !menuButton.contains(e.target)) closeSidebar(); });
       backdrop.addEventListener('click', closeSidebar);
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && isOpen()) closeSidebar(); });
+      window.addEventListener('resize', () => { if (!isMobile()) { backdrop.classList.add('hidden'); sidebar.classList.remove('-translate-x-full'); } else { closeSidebar(); } });
 
-      // esc
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && isOpen()) closeSidebar();
-      });
-
-      // responsive sync
-      window.addEventListener('resize', () => {
-        if (isMobile()) {
-          closeSidebar();
-        } else {
-          backdrop.classList.add('hidden');
-          sidebar.classList.remove('-translate-x-full');
-        }
-      });
-
-      // form submit
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const url = urlInput.value.trim();
         if (!url) {
-          displayError('Please enter a Weibo URL.');
+          displayError('Silakan masukkan URL Weibo.');
           return;
         }
 
         loader.classList.remove('d-none');
-        buttonText.textContent = 'Processing...';
+        buttonText.textContent = 'Memproses...';
         resultsDiv.innerHTML = '';
 
         try {
-          const response = await fetch('/api/health/api', {
+          const response = await fetch('/api/api', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url })
           });
 
           const data = await response.json();
-          if (!response.ok) throw new Error(data.message || 'Something went wrong.');
+          if (!response.ok) throw new Error(data.message || 'Terjadi kesalahan.');
           displayResults(data);
         } catch (err) {
           displayError(err.message);
@@ -201,15 +170,15 @@
 
       function displayResults(data) {
         if (!data || data.length === 0) {
-          displayError('No video found. Please check the URL.');
+          displayError('Video tidak ditemukan. Periksa kembali URL Anda.');
           return;
         }
-        let html = `<div class="ios-card p-4"><h3 class="text-lg font-semibold mb-3">Download Links:</h3>`;
+        let html = `<div class="ios-card p-4"><h3 class="text-lg font-semibold text-white mb-3">Tautan Unduhan:</h3>`;
         data.forEach(item => {
           html += `
-            <div class="mb-3 p-3 bg-gray-50 rounded-lg">
-              <p class="text-sm text-gray-600">Quality: ${item.quality || 'Standard'}</p>
-              <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="ios-button inline-block mt-2 text-sm">Download Video</a>
+            <div class="mb-3 p-3 bg-gray-800 rounded-lg">
+              <p class="text-sm text-gray-400">Kualitas: ${item.quality || 'Standar'}</p>
+              <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="ios-button inline-block mt-2 text-sm">Unduh Video</a>
             </div>`;
         });
         html += `</div>`;
@@ -218,7 +187,7 @@
 
       function displayError(message) {
         resultsDiv.innerHTML = `
-          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg" role="alert">
+          <div class="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded-lg" role="alert">
             <strong class="font-bold">Error:</strong>
             <span class="block sm:inline">${message}</span>
           </div>`;

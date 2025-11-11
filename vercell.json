@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/health/api.js",
+      "src": "api/api.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api/health/api",
-      "dest": "/api/health/api.js"
+      "src": "/api/api",
+      "dest": "/api/api.js"
     }
   ]
 }
